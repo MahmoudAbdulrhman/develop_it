@@ -62,6 +62,9 @@ app.delete('/api/party/:id', (req, res)=>{
         })
     });
 
+
+//candidates query
+
 //request all the info on the table
 app.get('/api/candidates', (req, res)=>{
     const sql = `SELECT candidates.*, parties.name
@@ -150,6 +153,32 @@ app.post('/api/candidate', ({ body }, res) => {
       });
     });
   });
+
+  app.put('api/candidate/:id', (req, res)=>{
+
+    const errors = inputCheck(req.body, 'party_id');
+
+    if(errors){
+        res.status(400).json({ erorr: errors});
+        return;
+    }
+    
+    const sql = `UPDATE candidate SET party_id =? 
+                  WHERE id =?`;
+    const params =[req.body.party_id,req.params.id];
+
+    db.run(sql, params, function(err, result){
+        if(err){
+            res.status(400).json({ error: err.message})
+        }
+        res.json({
+            message: 'SUCCESS!!',
+            data: req.body,
+            changes: this.changes
+        })
+    })
+  })
+
 
 
 //Default response for any other request(Not found) Catch all
