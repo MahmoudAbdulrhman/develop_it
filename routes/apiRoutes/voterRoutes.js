@@ -10,11 +10,27 @@ router.get('/voters', (req, res)=>{
     const params = []
     db.all(sql, params, (err, rows)=>{
         if(err){
-            res.status(500).json({ error: err.message})
+            res.status(500).json({ error: err.message});
+            return;
         }
         res.json({
             message: "SUCCESS!!!",
             data: rows
+        })
+    })
+})
+
+router.get('/voter/:id', (req, res)=>{
+    const sql = `SELECT * FROM voters WHERE id=?`;
+    const params = [req.params.id]
+    db.all(sql, params, (err, row)=>{
+        if(err){
+            res.status(400).json({ error: err.message});
+            return;
+        }
+        res.json({
+          message:'SUCCESS!!!',
+          data: row
         })
     })
 })
